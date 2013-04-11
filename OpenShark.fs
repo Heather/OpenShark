@@ -171,7 +171,7 @@ module Properties =
     let Save(ini : IniFile) =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
 /// __________________________________________________________________________________________________________
-let project = "OpenShark v.0.0.3"
+let project = "OpenShark v.0.0.4"
 let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
@@ -235,8 +235,8 @@ type main() as f =
         f.InitializeForm
     /// ______________________________________________________________________________________________________
     member f.InitializeForm =
-        f.Width   <- 800
-        f.Height  <- 750
+        f.Width   <- 1000
+        f.Height  <- 650
         f.Text    <- project
         //  Web Browser
         w.Dock                      <- DockStyle.Fill
