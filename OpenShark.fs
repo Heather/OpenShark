@@ -1,16 +1,16 @@
 ﻿#light (* exec fsharpi --exec $0 $@ *)
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 open System;            open System.Text
 open System.Drawing;    open System.Windows.Forms
 open System.IO;         open System.ComponentModel
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 #if __MonoCS__
 let isLinux =
     int Environment.OSVersion.Platform |> fun p ->
         (p = 4) || (p = 6) || (p = 128)
 #else
 open System.Runtime.InteropServices
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Hotkeys =
     let WM_HOTKEY           = 0x0312;
@@ -24,7 +24,7 @@ type ModifierKeys =
     | Control   = 2
     | Shift     = 4
     | Win       = 8
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 type KeyPressedEventArgs(modifier, key) =
     inherit EventArgs()
     let _modifier = modifier
@@ -32,14 +32,14 @@ type KeyPressedEventArgs(modifier, key) =
 
     member X.Modifier   with get() = _modifier
     member X.Key        with get() = _key
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Win32 =
     [<DllImport(@"User32", CharSet = CharSet.Ansi, SetLastError = false, ExactSpelling = true)>]
     extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vk);
     [<DllImport(@"User32", CharSet = CharSet.Ansi, SetLastError = false, ExactSpelling = true)>]
     extern bool UnregisterHotKey(IntPtr hWnd, int id)
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 type KeyboardHook() as X =
     inherit NativeWindow()
     let mutable _currentId = 0
@@ -108,7 +108,7 @@ type KeyboardHook() as X =
             X.unregisterAllHotkeys()
             X.DestroyHandle()
 #endif
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 type IconResource (name:string) =
     let loadIconResource name =
         let pths = [
@@ -135,7 +135,7 @@ type IconResource (name:string) =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>] 
 module IconResource =
     let OpenShark = IconResource "OpenShark.ico"
-//------------------------------------------------------------------------------------------------------------//
+/// __________________________________________________________________________________________________________
 #if __MonoCS__
     // TODO: conf file
 #else
@@ -144,7 +144,7 @@ module kernel =
     extern int64 WritePrivateProfileString(string section, string key, string v, string filePath);
     [<DllImport("kernel32")>]
     extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
-//------------------------------------------------------------------------------------------------------------//
+/// __________________________________________________________________________________________________________
 type public IniFile(iNIPath : string) =
     let mutable path = iNIPath
     member X.Path
@@ -157,36 +157,36 @@ type public IniFile(iNIPath : string) =
         let i = kernel.GetPrivateProfileString(section, key, "", temp, 255, X.Path)
         temp.ToString()
 #endif
-//------------------------------------------------------------------------------------------------------------//
+/// __________________________________________________________________________________________________________
 module Properties =
-    //very static properties:
+    //very Static properties:
     let mutable trayMinimize        = true
     let mutable trackWindowPosition = false
     let mutable startMinimized      = false
-    //very dynamic properties:
+    //very Dynamic properties:
     let mutable WindowPosition  = new Rectangle()
     let mutable WindowState     = FormWindowState.Normal
-    //hotkeys:
+    //Hotkeys:
     let mutable hotkeyPlay  = int Keys.None
     let Save(ini : IniFile) =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 let project = "OpenShark v.0.0.1"
 let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let w = new WebBrowser()
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let components = new Container()
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let about   = new ToolStripMenuItem();
     let exit    = new ToolStripMenuItem();
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let mutable windowInitialized = false
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let showHideWindow() =
         if f.WindowState = FormWindowState.Minimized then
             f.Show(); f.WindowState <- FormWindowState.Normal;
@@ -200,12 +200,12 @@ type main() as f =
     let track() =
         if (f.WindowState = FormWindowState.Normal) then
             Properties.WindowPosition <- f.DesktopBounds
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     let playerExecute action = w.Document.GetElementById(action).InvokeMember("click") |> ignore
     let htmlClickOn selector =
         if w.ReadyState = WebBrowserReadyState.Complete then
             w.Document.InvokeScript("clickElement", [|(selector : obj)|]) |> ignore
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     do  // Read properties & Init Form
         #if __MonoCS__
         //Read conf file
@@ -218,33 +218,31 @@ type main() as f =
         else Properties.Save(ini)
         #endif
         f.InitializeForm
-    /// ------------------------------------------------------------------------------------------------------
-    //static member hook : KeyboardHook = hk
-    /// ------------------------------------------------------------------------------------------------------
+    /// ______________________________________________________________________________________________________
     member f.InitializeForm =
         f.Width   <- 800
         f.Height  <- 750
         f.Text    <- project
-        //              WebBrowser
+        //  Web Browser
         w.Dock                      <- DockStyle.Fill
         w.ScriptErrorsSuppressed    <- true
         w.Url                       <- new Uri("http://listen.grooveshark.com")
         w.DocumentCompleted.Add <| fun _ -> ()
-        //              Notify Icon
+        //  Notify Icon
         notifyIcon.ContextMenuStrip <- contextMenuStrip
         notifyIcon.Text             <- "OpenShark"
         notifyIcon.Icon             <- IconResource.OpenShark.Icon
         notifyIcon.Visible          <- true
         notifyIcon.MouseDoubleClick.Add <| fun _ ->
             f.Show(); f.WindowState <- FormWindowState.Normal
-        //              Context menu
+        //  Context menu
         contextMenuStrip.Items.AddRange(
             [|  about
                 exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
         about.Text  <- "About"; about.Click.Add <| fun _ -> MessageBox.Show(project) |> ignore
         exit.Text   <- "Exit";  exit.Click.Add  <| fun _ -> f.Close()
-        /// --------------------------------------------------------------------------------------------------
+        /// ______________________________________________________________________________________________________
         f.Load.Add <| fun _ ->
             hook.KeyPressed.Add <| fun (_, e) ->
                 match e.Key.ToString() with
@@ -269,16 +267,16 @@ type main() as f =
         f.Resize.Add <| fun _ ->
             if (Properties.trayMinimize) then 
                 if (f.WindowState = FormWindowState.Minimized) then f.Hide()
-        /// --------------------------------------------------------------------------------------------------
+        /// ______________________________________________________________________________________________________
         f.Icon              <- IconResource.OpenShark.Icon
         f.CausesValidation  <- false;
-        /// --------------------------------------------------------------------------------------------------
+        /// ______________________________________________________________________________________________________
         f.Controls.AddRange [|w|]; windowInitialized <- true
-        /// --------------------------------------------------------------------------------------------------
+        /// ______________________________________________________________________________________________________
         contextMenuStrip.ResumeLayout(false)
         f.ResumeLayout(false)
         f.PerformLayout()
-    /// ------------------------------------------------------------------------------------------------------
+    /// __________________________________________________________________________________________________________
     override f.OnLoad(e : EventArgs) =
         base.OnLoad(e);
     override f.OnClosed(e : EventArgs) =
@@ -294,11 +292,11 @@ type main() as f =
     override f.Dispose(disposing : bool) =
         if not disposing then if components <> null then components.Dispose()
         base.Dispose(disposing)
-/// ---------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________
 [<STAThread>] do 
     let mutable ok = ref true
     let m = new System.Threading.Mutex(true, "WinGrooves", ok)
     if !ok then Application.Run(new main());   
     else MessageBox.Show("OpenShark is already running.") |> ignore
     GC.KeepAlive(m)
-/// ----------------------------------------------------------------------------------------------------------
+/// __________________________________________________________________________________________________________

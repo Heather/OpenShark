@@ -8,21 +8,18 @@ member f.InitializeForm =
     w.ScriptErrorsSuppressed    <- true
     w.Url                       <- new Uri("http://listen.grooveshark.com")
     w.DocumentCompleted.Add <| fun _ -> ()
-    //              Notify Icon
     notifyIcon.ContextMenuStrip <- contextMenuStrip
     notifyIcon.Text             <- "OpenShark"
     notifyIcon.Icon             <- IconResource.OpenShark.Icon
     notifyIcon.Visible          <- true
     notifyIcon.MouseDoubleClick.Add <| fun _ ->
         f.Show(); f.WindowState <- FormWindowState.Normal
-    //              Context menu
     contextMenuStrip.Items.AddRange(
         [|  about
             exit
         |]  |> Array.map(fun t -> t :> ToolStripItem))
     about.Text  <- "About"; about.Click.Add <| fun _ -> MessageBox.Show(project) |> ignore
     exit.Text   <- "Exit";  exit.Click.Add  <| fun _ -> f.Close()
-    /// --------------------------------------------------------------------------------------------------
     f.Load.Add <| fun _ ->
         hook.KeyPressed.Add <| fun (_, e) ->
             match e.Key.ToString() with
