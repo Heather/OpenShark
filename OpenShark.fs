@@ -171,7 +171,7 @@ module Properties =
     let Save(ini : IniFile) =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
 /// __________________________________________________________________________________________________________
-let project = "OpenShark v.0.0.2"
+let project = "OpenShark v.0.0.3"
 let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
@@ -182,8 +182,14 @@ type main() as f =
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
     /// ______________________________________________________________________________________________________
-    let about   = new ToolStripMenuItem();
-    let exit    = new ToolStripMenuItem();
+    let current     = new ToolStripMenuItem()
+    let about       = new ToolStripMenuItem()
+    let exit        = new ToolStripMenuItem()
+    let previous    = new ToolStripMenuItem()
+    let next        = new ToolStripMenuItem()
+    let play        = new ToolStripMenuItem()
+    let like        = new ToolStripMenuItem()
+    let dislike     = new ToolStripMenuItem()
     /// ______________________________________________________________________________________________________
     let mutable windowInitialized = false
     /// ______________________________________________________________________________________________________
@@ -246,11 +252,25 @@ type main() as f =
             f.Show(); f.WindowState <- FormWindowState.Normal
         //  Context menu
         contextMenuStrip.Items.AddRange(
-            [|  about
+            [|  current
+                previous
+                next
+                play
+                like
+                dislike
+                about
                 exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
-        about.Text  <- "About"; about.Click.Add <| fun _ -> MessageBox.Show(project) |> ignore
-        exit.Text   <- "Exit";  exit.Click.Add  <| fun _ -> f.Close()
+        current.Text    <- ":"
+        current.Enabled <- false
+        about.Text      <- "About";     about.Click.Add     <| fun _ -> MessageBox.Show(project, "About") |> ignore
+        exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
+        previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
+        next.Text       <- "Next";      next.Click.Add      <| fun _ -> playerExecute "play-next"
+        play.Text       <- "Play/Pause";play.Click.Add      <| fun _ -> playerExecute "play-pause"
+        play.Text       <- "Play/Pause";play.Click.Add      <| fun _ -> playerExecute "play-pause"
+        like.Text       <- "Like";      like.Click.Add      <| fun _ -> htmlClickOn "#player-wrapper .queue-item-active .smile"
+        dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
         /// ______________________________________________________________________________________________________
         f.Load.Add <| fun _ ->
             hook.KeyPressed.Add <| fun (_, e) ->
