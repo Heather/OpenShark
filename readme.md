@@ -3,7 +3,6 @@ member f.InitializeForm =
     f.Width   <- 800
     f.Height  <- 750
     f.Text    <- project
-    //              WebBrowser
     w.Dock                      <- DockStyle.Fill
     w.ScriptErrorsSuppressed    <- true
     w.Url                       <- new Uri("http://listen.grooveshark.com")
