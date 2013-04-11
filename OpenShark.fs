@@ -164,14 +164,14 @@ module Properties =
     let mutable trackWindowPosition = false
     let mutable startMinimized      = false
     //very Dynamic properties:
-    let mutable WindowPosition  = new Rectangle()
+    let mutable WindowPosition  = Rectangle.Empty
     let mutable WindowState     = FormWindowState.Normal
     //Hotkeys:
     let mutable hotkeyPlay  = int Keys.None
     let Save(ini : IniFile) =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
 /// __________________________________________________________________________________________________________
-let project = "OpenShark v.0.0.1"
+let project = "OpenShark v.0.0.2"
 let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
@@ -206,17 +206,26 @@ type main() as f =
         if w.ReadyState = WebBrowserReadyState.Complete then
             w.Document.InvokeScript("clickElement", [|(selector : obj)|]) |> ignore
     /// ______________________________________________________________________________________________________
+    #if __MonoCS__
+    //Load conf file
+    #else
+    let fn = Path.GetDirectoryName(Application.ExecutablePath) + "\\OpenShark.ini"
+    let ini = new IniFile(fn)
+    #endif
     do  // Read properties & Init Form
         #if __MonoCS__
         //Read conf file
         #else
-        let fn = Path.GetDirectoryName(Application.ExecutablePath) + "\\OpenShark.ini"
-        let ini = new IniFile(fn)
         if File.Exists fn then
             if ini.IniReadValue "General" "trayMinimize" = "1" then
                 Properties.trayMinimize <- true
-        else Properties.Save(ini)
+        else Properties.Save ini (* Create Ini file *)
         #endif
+        if (Properties.WindowPosition <> Rectangle.Empty) && isVisibleOnAnyScreen(Properties.WindowPosition) then
+            f.StartPosition     <- FormStartPosition.Manual
+            f.DesktopBounds     <- Properties.WindowPosition
+            f.WindowState       <- Properties.WindowState
+        else f.StartPosition    <- FormStartPosition.WindowsDefaultLocation
         f.InitializeForm
     /// ______________________________________________________________________________________________________
     member f.InitializeForm =
@@ -283,8 +292,9 @@ type main() as f =
         base.OnClosed(e)
         match f.WindowState with
         | FormWindowState.Normal | FormWindowState.Maximized ->
-            Properties.WindowState <- f.WindowState
-        | _ -> Properties.WindowState <- FormWindowState.Normal
+            Properties.WindowState      <- f.WindowState
+        | _ -> Properties.WindowState   <- FormWindowState.Normal
+        Properties.Save ini
     override f.OnResize(e : EventArgs) =
         base.OnResize(e); if (windowInitialized && Properties.trackWindowPosition) then track()
     override f.OnMove(e : EventArgs) =
