@@ -1,18 +1,28 @@
+![Screenshot](Resources/OpenShark.ico) OpenShark
+------------------------------------------------
+
+ - light WinGrooves re-code on F#
+ - Run rc.bat to generate res file for icon
+
+FEATURES (Most of features are just WinGrooves but I list them anyways) :
+
+ - Open GrooveShark in a separate window instead of a web browser
+ - Minimize WinGrooves to the tray
+ - Tray icon buttons [ Next Previous Play / Stop Like Dislike ]
+ - Control WinGrooves using the media keys on your keyboard or using global customizable Hotkeys while in any application
+
+TODO:
+
+ - All the properties to xml or ini file (maybe conf for mono)
+ - Options window to config all the stuff
+
+This snippet of code is not actual and it's here for fun
+
 ```fsharp
 member f.InitializeForm =
-    f.Width   <- 800
-    f.Height  <- 750
-    f.Text    <- project
     w.Dock                      <- DockStyle.Fill
     w.ScriptErrorsSuppressed    <- true
-    w.Url                       <- new Uri("http://listen.grooveshark.com")
-    w.DocumentCompleted.Add <| fun _ -> ()
-    notifyIcon.ContextMenuStrip <- contextMenuStrip
-    notifyIcon.Text             <- "OpenShark"
-    notifyIcon.Icon             <- IconResource.OpenShark.Icon
-    notifyIcon.Visible          <- true
-    notifyIcon.MouseDoubleClick.Add <| fun _ ->
-        f.Show(); f.WindowState <- FormWindowState.Normal
+    w.Url                       <- new Uri("http://listen.grooveshark.com")e
     contextMenuStrip.Items.AddRange(
         [|  about
             exit
@@ -25,7 +35,6 @@ member f.InitializeForm =
             | "MediaPlayPause"      -> playerExecute "play-pause"
             | "MediaNextTrack"      -> playerExecute "play-next"
             | "MediaPreviousTrack"  -> playerExecute "play-prev"
-            | _ -> ()
             let KeyAsInt = int (e.Key ||| hook.keyToModifierKey(e.Modifier))
             if (KeyAsInt = Properties.hotkeyPlay) then
                 htmlClickOn "#play-pause"

@@ -109,24 +109,30 @@ type KeyboardHook() as X =
             X.DestroyHandle()
 #endif
 /// __________________________________________________________________________________________________________
-type IconResource (name:string) =
-    let loadIconResource name =
-        let pths = [
-            "../../";
-            "../"
-            ]
-        let rec tryLoad(x) =
-            let p = 
-                if x = -1 then  name                        
-                else pths.[x] + name
-            if File.Exists p then
-                new System.Drawing.Icon(p : string)
-            else 
-                if x < pths.Length  then tryLoad(x + 1)
-                else null
-        tryLoad -1
+open System.Reflection
+type IconResource (name : string, res : bool) =
+    let loadIconResource name res =
+        if res then
+            let assm = Assembly.GetExecutingAssembly()
+            let res = assm.GetManifestResourceStream(name)
+            new Icon(res)
+        else 
+            let pths = [
+                "../../";
+                "../"
+                ]
+            let rec tryLoad(x) =
+                let p = 
+                    if x = -1 then  name                        
+                    else pths.[x] + name
+                if File.Exists p then
+                    new Icon(p : string)
+                else 
+                    if x < pths.Length  then tryLoad(x + 1)
+                    else null
+            tryLoad -1
 
-    let image = loadIconResource name
+    let image = loadIconResource name res
 
     member __.Name = name
     member __.Icon = image
@@ -134,7 +140,7 @@ type IconResource (name:string) =
 [<RequireQualifiedAccess>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>] 
 module IconResource =
-    let OpenShark = IconResource "OpenShark.ico"
+    let OpenShark = IconResource ("OpenShark.ico", true)
 /// __________________________________________________________________________________________________________
 #if __MonoCS__
     // TODO: conf file
@@ -171,7 +177,7 @@ module Properties =
     let Save(ini : IniFile) =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
 /// __________________________________________________________________________________________________________
-let project = "OpenShark v.0.0.4"
+let project = "OpenShark v.0.0.5"
 let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
@@ -184,6 +190,7 @@ type main() as f =
     /// ______________________________________________________________________________________________________
     let current     = new ToolStripMenuItem()
     let about       = new ToolStripMenuItem()
+    let options     = new ToolStripMenuItem()
     let exit        = new ToolStripMenuItem()
     let previous    = new ToolStripMenuItem()
     let next        = new ToolStripMenuItem()
@@ -235,7 +242,7 @@ type main() as f =
         f.InitializeForm
     /// ______________________________________________________________________________________________________
     member f.InitializeForm =
-        f.Width   <- 1000
+        f.Width   <- 1200
         f.Height  <- 650
         f.Text    <- project
         //  Web Browser
@@ -259,11 +266,14 @@ type main() as f =
                 like
                 dislike
                 about
+                options
                 exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
-        current.Text    <- ":"
+        current.Text    <- "Current:" // TODO: Song info
         current.Enabled <- false
-        about.Text      <- "About";     about.Click.Add     <| fun _ -> MessageBox.Show(project, "About") |> ignore
+        about.Text      <- project
+        about.Enabled   <- false
+        options.Text    <- "Options";   options.Click.Add   <| fun _ -> MessageBox.Show "Not supported yet" |> ignore
         exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
         previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
         next.Text       <- "Next";      next.Click.Add      <| fun _ -> playerExecute "play-next"
