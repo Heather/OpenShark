@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.0"
+    let project = "OpenShark v.0.1.1"
     let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
@@ -17,7 +17,7 @@ type main() as f =
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
     /// ______________________________________________________________________________________________________
-    let current     = new ToolStripMenuItem() //System.Windows.Forms
+    let current     = new ToolStripMenuItem()
     let about       = new ToolStripMenuItem()
     let emo         = new ToolStripMenuItem()
     let options     = new ToolStripMenuItem()

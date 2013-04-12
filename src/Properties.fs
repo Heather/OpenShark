@@ -27,6 +27,7 @@ module Properties =
 
     let Load(ini : IniFile) =
         let (=->) s v = if ini.IniReadValue s v = "1" then true else false
+        let (=|>) s v = ini.IniReadValue s v
         let (==>) s v = 
             let tryref  = ref 0
             let str     = ini.IniReadValue s v
@@ -35,6 +36,16 @@ module Properties =
         trayMinimize        <- "General" =-> "trayMinimize"
         trackWindowPosition <- "General" =-> "trackWindowPosition"
         startMinimized      <- "General" =-> "startMinimized"
+
+        WindowPosition <-   match "Window" =|> "WindowPosition" with
+                            | "Empty"       -> Rectangle.Empty
+                            //TODO:         -> Process Other
+                            | _             -> Rectangle.Empty
+        WindowState <-      match "Window" =|> "WindowState" with
+                            | "Normal"      -> FormWindowState.Normal
+                            | "Maximized"   -> FormWindowState.Maximized
+                            | "Minimized"   -> FormWindowState.Minimized
+                            | _             -> FormWindowState.Normal
 
         hotkeyPlay          <- "HotKeys" ==> "hotkeyPlay"
         hotkeyNext          <- "HotKeys" ==> "hotkeyNext"
@@ -57,6 +68,18 @@ module Properties =
         "General" =-> "trayMinimize"        <| trayMinimize
         "General" =-> "trackWindowPosition" <| trackWindowPosition
         "General" =-> "startMinimized"      <| startMinimized
+
+        "Window" ==> "WindowPosition"   
+            <|  match WindowPosition with
+                | w when w = Rectangle.Empty -> "Empty"
+                | _ -> "Empty"
+
+        "Window" ==> "WindowState"   
+            <|  match WindowState with
+                | w when w = FormWindowState.Normal     -> "Normal"
+                | w when w = FormWindowState.Maximized  -> "Maximized"
+                | w when w = FormWindowState.Minimized  -> "Minimized"
+                | _ -> "Normal"
 
         "HotKeys" ==> "hotkeyPlay"      <| hotkeyPlay
         "HotKeys" ==> "hotkeyNext"      <| hotkeyNext
