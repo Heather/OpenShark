@@ -5,11 +5,6 @@ open System; open System.Text; open System.Windows.Forms
 [<AutoOpen>]
 module ApiHook =
     /// ______________________________________________________________________________________________________
-    #if __MonoCS__
-    let isLinux =
-        int Environment.OSVersion.Platform |> fun p ->
-            (p = 4) || (p = 6) || (p = 128)
-    #else
     open System.Runtime.InteropServices
     /// ______________________________________________________________________________________________________
     [<AutoOpen>]
@@ -104,5 +99,4 @@ module ApiHook =
             member D.Dispose() = 
                 X.unregisterAllHotkeys()
                 X.DestroyHandle()
-    #endif
 /// __________________________________________________________________________________________________________

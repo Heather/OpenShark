@@ -7,11 +7,7 @@ open System.IO;         open System.ComponentModel
 [<AutoOpen>]
 module Core =
     let project = "OpenShark v.0.1.0"
-    #if __MonoCS__
-    //No Win32 Keyboard hook for mono
-    #else
     let hook = new KeyboardHook()
-    #endif
 type main() as f = 
     inherit Form()
     /// ______________________________________________________________________________________________________
@@ -54,19 +50,10 @@ type main() as f =
         if w.ReadyState = WebBrowserReadyState.Complete then
             w.Document.InvokeScript("clickElement", [|(selector : obj)|]) |> ignore
     /// ______________________________________________________________________________________________________
-    #if __MonoCS__
-    //Load conf file
-    #else
     let fn = Path.GetDirectoryName(Application.ExecutablePath) + "\\OpenShark.ini"
     let ini = new IniFile(fn)
-    #endif
-    do  // Read properties & Init Form
-        #if __MonoCS__
-        //Read conf file
-        #else
-        if File.Exists fn then Properties.Load ini (* Load config *)
+    do  if File.Exists fn then Properties.Load ini (* Load config *)
         else Properties.Save ini (* Create config *)
-        #endif
         if (Properties.WindowPosition <> Rectangle.Empty) && isVisibleOnAnyScreen(Properties.WindowPosition) then
             f.StartPosition     <- FormStartPosition.Manual
             f.DesktopBounds     <- Properties.WindowPosition
@@ -121,9 +108,6 @@ type main() as f =
         dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
         /// ______________________________________________________________________________________________________
         f.Load.Add <| fun _ ->
-            #if __MonoCS__
-                //No Win32 Keyboard hook for mono
-            #else
             hook.KeyPressed.Add <| fun (_, e) ->
                 match e.Key.ToString() with
                 | "MediaPlayPause"      -> playerExecute "play-pause"
@@ -142,12 +126,8 @@ type main() as f =
                     | k when k = Properties.hotkeyShuffle   -> htmlClickOn "#shuffle"
                     | k when k = Properties.hotkeyShowHide  -> showHideWindow()
                     | _ -> ()
-            #endif
             w.ObjectForScripting <- f
             if Properties.startMinimized then showHideWindow()
-        #if __MonoCS__
-            //No Win32 Keyboard hook for mono
-        #else
         f.Activated.Add <| fun _ ->
             hook.unregisterAllHotkeys()
             try [   VK_MEDIA_PLAY_PAUSE
@@ -168,7 +148,6 @@ type main() as f =
                         hook.Win32ModifiersFromKeys(enum<Keys> k)
                         , hook.getKeyWithoutModifier(enum<Keys> k)))
             with | :? InvalidOperationException -> ()
-        #endif
         f.Resize.Add <| fun _ ->
             if (Properties.trayMinimize) then 
                 if (f.WindowState = FormWindowState.Minimized) then f.Hide()
