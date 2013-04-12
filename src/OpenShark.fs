@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.0.9"
+    let project = "OpenShark v.0.1.0"
     #if __MonoCS__
     //No Win32 Keyboard hook for mono
     #else
@@ -64,10 +64,8 @@ type main() as f =
         #if __MonoCS__
         //Read conf file
         #else
-        if File.Exists fn then
-            if ini.IniReadValue "General" "trayMinimize" = "1" then
-                Properties.trayMinimize <- true
-        else Properties.Save ini (* Create Ini file *)
+        if File.Exists fn then Properties.Load ini (* Load config *)
+        else Properties.Save ini (* Create config *)
         #endif
         if (Properties.WindowPosition <> Rectangle.Empty) && isVisibleOnAnyScreen(Properties.WindowPosition) then
             f.StartPosition     <- FormStartPosition.Manual
