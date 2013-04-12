@@ -1,5 +1,5 @@
-![Screenshot](Resources/OpenShark.ico) OpenShark
-------------------------------------------------
+OpenShark ![Screenshot](Resources/OpenShark.ico)
+================================================
 
  - light WinGrooves re-code on F#
  - Run rc.bat to generate res file for icon
