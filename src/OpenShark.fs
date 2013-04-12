@@ -1,4 +1,5 @@
-﻿namespace OpenShark
+﻿
+namespace OpenShark
 /// __________________________________________________________________________________________________________
 open System;            open System.Text
 open System.Drawing;    open System.Windows.Forms
@@ -6,10 +7,67 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.2"
+    let project = "OpenShark v.2.0.0"
     let hook = new KeyboardHook()
-type main() as f = 
-    inherit Form()
+
+    // View Model
+    type Person (firstName, lastName, age) =
+        static member New (firstName, lastName, age) =
+                new Person(firstName, lastName, age)
+        member this.LastName
+                    with get () = lastName
+                    and set (value : string) = ()
+        member this.FirstName
+                    with get () = firstName
+                    and set (value : string) = ()
+        member this.Age
+                    with get () = age
+                    and set (value : int) = ()
+
+    let dataContext = [("Homer", "Simpson", 46)
+                       ("Marge", "Simpson", 42)
+                       ("Lisa", "Simpson", 9)
+                       ("Bart", "Simpson", 12) ] |> List.map (Person.New)
+
+
+    // Header
+    let header = [ label [width 100] "First Name"
+                   label [width 100] "Last Name"
+                   label [width 50] "Age" ] |> stackpanel [] Horizontal
+
+    // Row
+    let row = [ textbox [width 100] <@@ fun (x:Person) -> x.FirstName @@>
+                textbox [width 100] <@@ fun (x:Person) -> x.LastName @@>
+                textbox [width 50] <@@ fun (x:Person) -> x.Age @@> ]
+                |> stackpanel [] Horizontal
+
+    // Data Template
+    let sampleTemplate = datatemplate row
+
+    (*let openGrid = [    header
+                        itemscontrol sampleTemplate
+                        button "submit" ] |> stackpanel [width 250] Vertical
+                                         |> border Blue*)
+
+    let openGrid = 
+        [ // :?> FrameworkElement
+        ] |> stackpanel [width 650] Vertical
+          |> border Blue
+
+    // Main Window
+    let mainWindow = window [width 1200; height 650] openGrid
+/// __________________________________________________________________________________________________________
+[<AutoOpen>]
+module Main = [<STAThread>] do 
+    let mutable ok = ref true
+    let m = new System.Threading.Mutex(true, "WinGrooves", ok)
+    if !ok then run mainWindow dataContext
+    else MessageBox.Show("OpenShark is already running.") |> ignore
+    GC.KeepAlive(m)
+/// __________________________________________________________________________________________________________
+
+
+(*    inherit Form()
     /// ______________________________________________________________________________________________________
     let w = new WebBrowser()
     let components = new Container()
@@ -170,12 +228,4 @@ type main() as f =
     override f.Dispose(disposing : bool) =
         if not disposing then if components <> null then components.Dispose()
         base.Dispose(disposing)
-/// __________________________________________________________________________________________________________
-[<AutoOpen>]
-module Main = [<STAThread>] do 
-    let mutable ok = ref true
-    let m = new System.Threading.Mutex(true, "WinGrooves", ok)
-    if !ok then Application.Run(new main());   
-    else MessageBox.Show("OpenShark is already running.") |> ignore
-    GC.KeepAlive(m)
-/// __________________________________________________________________________________________________________
+        *)

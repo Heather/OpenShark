@@ -9,7 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50d543a8-04f0-424a-b93e-679e6df808bc}</ProjectGuid>
+    <ProjectGuid>{5b580a2b-45cd-4bb0-8b0a-87ac7e9abb58}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>OpenShark</RootNamespace>
     <AssemblyName>OpenShark</AssemblyName>
@@ -41,21 +41,33 @@
   <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <ItemGroup>
-    <Compile Include="src/HotKeys.fs" />
+    <Compile Include="src\HotKeys.fs" />
     <Compile Include="src\ApiHook.fs" />
     <Compile Include="src\Resources.fs" />
     <Compile Include="src\Properties.fs" />
+    <Compile Include="src\WPF.Xaml.fs" />
+    <Compile Include="src\WPF.Help.fs" />
+    <Compile Include="src\WPF.Parse.fs" />
+    <Compile Include="src\WPF.Run.fs" />
     <Compile Include="src\OpenShark.fs" />
     <EmbeddedResource Include="Resources\OpenShark.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Awesomium.Core, Version=1.7.0.5, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214" />
+    <Reference Include="Awesomium.Windows.Controls, Version=1.7.0.5, Culture=neutral, PublicKeyToken=7a34e179b8b61c39" />
+    <Reference Include="Awesomium.Windows.Forms, Version=1.7.0.5, Culture=neutral, PublicKeyToken=9bd24830fbe304a0" />
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	     Other similar extension points exist, see Microsoft.Common.targets.
