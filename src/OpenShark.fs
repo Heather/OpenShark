@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.0.7"
+    let project = "OpenShark v.0.0.8"
     #if __MonoCS__
     //No Win32 Keyboard hook for mono
     #else
