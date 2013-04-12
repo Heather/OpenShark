@@ -179,7 +179,11 @@ module Properties =
         ini.IniWriteValue "General" "trayMinimize" "1" |> ignore
 /// __________________________________________________________________________________________________________
 let project = "OpenShark v.0.0.5"
+#if __MonoCS__
+//No Win32 Keyboard hook for mono
+#else
 let hook = new KeyboardHook()
+#endif
 type main() as f = 
     inherit Form()
     /// ______________________________________________________________________________________________________
@@ -284,6 +288,9 @@ type main() as f =
         dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
         /// ______________________________________________________________________________________________________
         f.Load.Add <| fun _ ->
+            #if __MonoCS__
+                //No Win32 Keyboard hook for mono
+            #else
             hook.KeyPressed.Add <| fun (_, e) ->
                 match e.Key.ToString() with
                 | "MediaPlayPause"      -> playerExecute "play-pause"
@@ -293,8 +300,12 @@ type main() as f =
                 let KeyAsInt = int (e.Key ||| hook.keyToModifierKey(e.Modifier))
                 if (KeyAsInt = Properties.hotkeyPlay) then
                     htmlClickOn "#play-pause"
+            #endif
             w.ObjectForScripting <- f
             if Properties.startMinimized then showHideWindow()
+        #if __MonoCS__
+            //No Win32 Keyboard hook for mono
+        #else
         f.Activated.Add <| fun _ ->
             hook.unregisterAllHotkeys()
             try hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_PLAY_PAUSE)
@@ -304,6 +315,7 @@ type main() as f =
                     hook.Win32ModifiersFromKeys(enum<Keys> Properties.hotkeyPlay)
                   , hook.getKeyWithoutModifier(enum<Keys> Properties.hotkeyPlay))
             with | :? InvalidOperationException -> ()
+        #endif
         f.Resize.Add <| fun _ ->
             if (Properties.trayMinimize) then 
                 if (f.WindowState = FormWindowState.Minimized) then f.Hide()
