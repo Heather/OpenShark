@@ -6,13 +6,12 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.1"
+    let project = "OpenShark v.0.1.2"
     let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
     /// ______________________________________________________________________________________________________
     let w = new WebBrowser()
-    /// ______________________________________________________________________________________________________
     let components = new Container()
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
@@ -33,10 +32,9 @@ type main() as f =
     /// ______________________________________________________________________________________________________
     let showHideWindow() =
         if f.WindowState = FormWindowState.Minimized then
-            f.Show(); f.WindowState <- FormWindowState.Normal;
-        else
-            f.WindowState <- FormWindowState.Minimized
-            if Properties.trayMinimize then f.Hide()
+                f.Show(); f.WindowState <- FormWindowState.Normal
+        else    f.WindowState <- FormWindowState.Minimized
+                if Properties.trayMinimize then f.Hide()
     let isVisibleOnAnyScreen(rect : Rectangle) =
         if (Screen.AllScreens
             |> Seq.filter(fun s -> s.WorkingArea.IntersectsWith(rect))
@@ -65,38 +63,31 @@ type main() as f =
         f.Width   <- 1200
         f.Height  <- 650
         f.Text    <- project
-        //  Web Browser
+        /// ______________________________________________________________________________________________________
         w.Dock                      <- DockStyle.Fill
         w.ScriptErrorsSuppressed    <- true
         w.Url                       <- new Uri("http://listen.grooveshark.com")
-        w.DocumentCompleted.Add <| fun _ -> ()
-        //  Notify Icon
+        /// ______________________________________________________________________________________________________
         notifyIcon.ContextMenuStrip <- contextMenuStrip
         notifyIcon.Text             <- "OpenShark"
         notifyIcon.Icon             <- IconResource.OpenSharkIcon.Icon
         notifyIcon.Visible          <- true
         notifyIcon.MouseDoubleClick.Add <| fun _ ->
             f.Show(); f.WindowState <- FormWindowState.Normal
-        //  Context menu
+        /// ______________________________________________________________________________________________________
         contextMenuStrip.Items.AddRange(
             [|  current
-                previous
-                next
-                play
+                previous; next; play
                 emo
-                favorite
-                like
-                dislike
+                favorite; like; dislike
                 about
-                options
-                exit
+                options; exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
-        current.Text    <- "Current:" // TODO: Song info
-        current.Enabled <- false
-        about.Text      <- project
-        about.Enabled   <- false
-        emo.Text        <- "Emotions:"
-        emo.Enabled     <- false
+        /// ______________________________________________________________________________________________________
+        current.Text    <- "Current:";  current.Enabled     <- false
+        about.Text      <- project;     about.Enabled       <- false
+        emo.Text        <- "Emotions:"; emo.Enabled         <- false
+        /// ______________________________________________________________________________________________________
         options.Text    <- "Options";   options.Click.Add   <| fun _ -> MessageBox.Show "Not supported yet" |> ignore
         exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
         previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
@@ -128,6 +119,7 @@ type main() as f =
                     | _ -> ()
             w.ObjectForScripting <- f
             if Properties.startMinimized then showHideWindow()
+        /// ______________________________________________________________________________________________________
         f.Activated.Add <| fun _ ->
             hook.unregisterAllHotkeys()
             try [   VK_MEDIA_PLAY_PAUSE
@@ -148,6 +140,7 @@ type main() as f =
                         hook.Win32ModifiersFromKeys(enum<Keys> k)
                         , hook.getKeyWithoutModifier(enum<Keys> k)))
             with | :? InvalidOperationException -> ()
+        /// ______________________________________________________________________________________________________
         f.Resize.Add <| fun _ ->
             if (Properties.trayMinimize) then 
                 if (f.WindowState = FormWindowState.Minimized) then f.Hide()
