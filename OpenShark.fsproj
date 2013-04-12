@@ -41,6 +41,10 @@
   <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <ItemGroup>
+    <Compile Include="HotKeys.fs" />
+    <Compile Include="ApiHook.fs" />
+    <Compile Include="Resources.fs" />
+    <Compile Include="Properties.fs" />
     <Compile Include="OpenShark.fs" />
     <EmbeddedResource Include="Resources\OpenShark.ico" />
   </ItemGroup>
