@@ -16,8 +16,7 @@ TODO:
  - All the properties to xml or ini file (maybe conf for mono)
  - Options window to config all the stuff
 
-This snippet of code is not actual and it's here for fun ![Screenshot](Resources/OpenShark.ico)
-
+![Screenshot](Resources/OpenShark.ico)
 ```fsharp
 member f.InitializeForm =
     w.Dock                      <- DockStyle.Fill
