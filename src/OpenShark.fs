@@ -136,12 +136,23 @@ type main() as f =
         #else
         f.Activated.Add <| fun _ ->
             hook.unregisterAllHotkeys()
-            try hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_PLAY_PAUSE)
-                hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_NEXT_TRACK)
-                hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_PREV_TRACK)
-                hook.RegisterHotKey(
-                    hook.Win32ModifiersFromKeys(enum<Keys> Properties.hotkeyPlay)
-                  , hook.getKeyWithoutModifier(enum<Keys> Properties.hotkeyPlay))
+            try [   VK_MEDIA_PLAY_PAUSE
+                    VK_MEDIA_NEXT_TRACK
+                    VK_MEDIA_PREV_TRACK
+                ] |> Seq.iter(fun k -> hook.RegisterHotKey(ModifierKeys.None, enum<Keys> k))
+                [   Properties.hotkeyPlay
+                    Properties.hotkeyNext
+                    Properties.hotkeyPrevious
+                    Properties.hotkeyLike
+                    Properties.hotkeyDislike
+                    Properties.hotkeyFavorite
+                    Properties.hotkeyShowHide
+                    Properties.hotkeyMute
+                    Properties.hotkeyShuffle 
+                ] |> Seq.iter(fun k ->
+                    hook.RegisterHotKey(
+                        hook.Win32ModifiersFromKeys(enum<Keys> k)
+                        , hook.getKeyWithoutModifier(enum<Keys> k)))
             with | :? InvalidOperationException -> ()
         #endif
         f.Resize.Add <| fun _ ->
