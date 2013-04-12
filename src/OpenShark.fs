@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.0.8"
+    let project = "OpenShark v.0.0.9"
     #if __MonoCS__
     //No Win32 Keyboard hook for mono
     #else
@@ -21,13 +21,15 @@ type main() as f =
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
     /// ______________________________________________________________________________________________________
-    let current     = new ToolStripMenuItem()
+    let current     = new ToolStripMenuItem() //System.Windows.Forms
     let about       = new ToolStripMenuItem()
+    let emo         = new ToolStripMenuItem()
     let options     = new ToolStripMenuItem()
     let exit        = new ToolStripMenuItem()
     let previous    = new ToolStripMenuItem()
     let next        = new ToolStripMenuItem()
     let play        = new ToolStripMenuItem()
+    let favorite    = new ToolStripMenuItem()
     let like        = new ToolStripMenuItem()
     let dislike     = new ToolStripMenuItem()
     /// ______________________________________________________________________________________________________
@@ -96,6 +98,8 @@ type main() as f =
                 previous
                 next
                 play
+                emo
+                favorite
                 like
                 dislike
                 about
@@ -106,12 +110,15 @@ type main() as f =
         current.Enabled <- false
         about.Text      <- project
         about.Enabled   <- false
+        emo.Text        <- "Emotions:"
+        emo.Enabled     <- false
         options.Text    <- "Options";   options.Click.Add   <| fun _ -> MessageBox.Show "Not supported yet" |> ignore
         exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
         previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
         next.Text       <- "Next";      next.Click.Add      <| fun _ -> playerExecute "play-next"
         play.Text       <- "Play/Pause";play.Click.Add      <| fun _ -> playerExecute "play-pause"
         play.Text       <- "Play/Pause";play.Click.Add      <| fun _ -> playerExecute "play-pause"
+        favorite.Text   <- "Favorite";  favorite.Click.Add  <| fun _ -> htmlClickOn "#np-fav"
         like.Text       <- "Like";      like.Click.Add      <| fun _ -> htmlClickOn "#player-wrapper .queue-item-active .smile"
         dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
         /// ______________________________________________________________________________________________________
@@ -126,8 +133,17 @@ type main() as f =
                 | "MediaPreviousTrack"  -> playerExecute "play-prev"
                 | _ -> ()
                 let KeyAsInt = int (e.Key ||| hook.keyToModifierKey(e.Modifier))
-                if (KeyAsInt = Properties.hotkeyPlay) then
-                    htmlClickOn "#play-pause"
+                match KeyAsInt with
+                    | k when k = Properties.hotkeyPlay      -> htmlClickOn "#play-pause"
+                    | k when k = Properties.hotkeyNext      -> htmlClickOn "#play-next"
+                    | k when k = Properties.hotkeyPrevious  -> htmlClickOn "#play-prev"
+                    | k when k = Properties.hotkeyLike      -> htmlClickOn "#player-wrapper .queue-item-active .smile"
+                    | k when k = Properties.hotkeyDislike   -> htmlClickOn "##player-wrapper .queue-item-active .frown"
+                    | k when k = Properties.hotkeyFavorite  -> htmlClickOn "#np-fav"
+                    | k when k = Properties.hotkeyMute      -> htmlClickOn "#volume"
+                    | k when k = Properties.hotkeyShuffle   -> htmlClickOn "#shuffle"
+                    | k when k = Properties.hotkeyShowHide  -> showHideWindow()
+                    | _ -> ()
             #endif
             w.ObjectForScripting <- f
             if Properties.startMinimized then showHideWindow()
