@@ -25,5 +25,7 @@ module WPFHelp =
 
     let application = Application
 
+    let web = WebControl
+
     let window attrs c = Window (c, attrs)
 /// __________________________________________________________________________________________________________

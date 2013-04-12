@@ -23,6 +23,7 @@ module WPFXaml =
             | StackPanel of FrameworkElement list * Attribute list * Orientation
             | Border of Color * FrameworkElement
             | ItemsControl of DataTemplate
+            | WebControl of string
 
     type Window = Window of FrameworkElement * Attribute list
 

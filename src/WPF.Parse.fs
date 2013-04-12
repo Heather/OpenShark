@@ -57,12 +57,21 @@ module WPFParse =
                          sprintf @"<ItemsControl ItemsSource=""{Binding .}""> 
                                    <ItemsControl.ItemTemplate>%s</ItemsControl.ItemTemplate>
                                    </ItemsControl>" (parseDataTemplate t)
+                | WebControl args ->
+                            sprintf @"<awe:WebControl 
+                                        Name=""webControl"" 
+                                        WebSession=""{Binding Source={StaticResource mySession}}"" 
+                                        Source=""%s"" />" args
     /// ______________________________________________________________________________________________________
     let parseWindow (Window (c, attrs)) =
-                sprintf @"<Window %s>%s</Window>"
+                sprintf @"<Window 
+                        xmlns:core=""clr-namespace:Awesomium.Core;assembly=Awesomium.Core""
+                        xmlns:data=""http://schemas.awesomium.com/winfx/data""
+                        xmlns:awe=""http://schemas.awesomium.com/winfx""
+                        WindowStyle=""None""
+                        %s>%s</Window>"
                         (parseAttributes attrs)
                         (parseFrameworkElement c)
-
     /// ______________________________________________________________________________________________________
     let parseApplication c =
             sprintf @"<Application
