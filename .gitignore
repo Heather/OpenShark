@@ -3,3 +3,5 @@
 /*.res
 /*.sln
 /*.suo
+/*.config
+/Resources/*.db
