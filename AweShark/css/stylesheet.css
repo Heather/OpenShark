@@ -1,0 +1,41 @@
+.mleft, .mright {
+    min-height: 300px;
+}
+
+.mleft {
+    float: left;
+    width: 17%;
+}
+
+.mright {
+    float: right;
+    width: 83%;
+}
+
+@font-face {
+    font-family: 'OxygenRegular';
+    src: url('../fonts/Oxygen-webfont.svg#OxygenRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OxygenItalic';
+    src: url('../fonts/Oxygen-Italic-webfont.svg#OxygenItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OxygenBold';
+    src: url('../fonts/Oxygen-Bold-webfont.svg#OxygenBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OxygenBoldItalic';
+    src: url('../fonts/Oxygen-BoldItalic-webfont.svg#OxygenBoldItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

@@ -1,5 +1,4 @@
-﻿
-namespace OpenShark
+﻿namespace OpenShark
 /// __________________________________________________________________________________________________________
 open System;            open System.Text
 open System.Drawing;    open System.Windows.Forms

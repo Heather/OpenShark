@@ -48,13 +48,9 @@
   <ItemGroup>
     <Compile Include="src\HotKeys.fs" />
     <Compile Include="src\ApiHook.fs" />
-    <Compile Include="src\Resources.fs" />
     <Compile Include="src\Properties.fs" />
     <Compile Include="src\OpenShark.fs" />
     <EmbeddedResource Include="Resources\OpenShark.ico" />
-    <None Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Awesomium.Core, Version=1.7.0.5, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214" />
