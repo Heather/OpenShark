@@ -1,17 +1,3 @@
-.mleft, .mright {
-    min-height: 300px;
-}
-
-.mleft {
-    float: left;
-    width: 17%;
-}
-
-.mright {
-    float: right;
-    width: 83%;
-}
-
 @font-face {
     font-family: 'OxygenRegular';
     src: url('../fonts/Oxygen-webfont.svg#OxygenRegular') format('svg');

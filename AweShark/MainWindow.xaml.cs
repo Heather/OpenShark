@@ -35,16 +35,16 @@ namespace AweShark {
             }
 
         private void htmlClick(string action) {
-            if (this.webControl.IsDocumentReady) {
-                this.webControl.ExecuteJavascript(
+            if (this.webControlGroove.IsDocumentReady) {
+                this.webControlGroove.ExecuteJavascript(
                     String.Format(
-                        @"$(""#GroovePlayer"").contents().find(""a #{0}"").click();", action));
+                        @"document.getElementById('{0}').click();", action));
                 }
             }
 
         private void js(string selector) {
-            if (this.webControl.IsDocumentReady) {
-                this.webControl.ExecuteJavascript(selector);
+            if (this.webControlGroove.IsDocumentReady) {
+                this.webControlGroove.ExecuteJavascript(selector);
                 }
             }
 
@@ -107,16 +107,9 @@ namespace AweShark {
             if (System.IO.File.Exists(fn)) OpenShark.Properties.Load(ini);
             else OpenShark.Properties.Save(ini);
 
-            string[] ops = { 
-                           "--allow-file-access-from-files",
-                           "--allow-file-access",
-                           "--allow-http-background-page",
-                           "--disable-web-security" 
-                           };
             WebCore.Initialize(new WebConfig() {
-                HomeURL = new Uri("asset://local/web/index.html"),
-                LogLevel = LogLevel.Verbose,
-                AdditionalOptions = ops
+                HomeURL = new Uri("http://listen.grooveshark.com/"), // & asset://local/web/index.html
+                LogLevel = LogLevel.Verbose
             });
             InitializeComponent();
 
@@ -233,6 +226,26 @@ namespace AweShark {
         private void webControl_ConsoleMessage(object sender, ConsoleMessageEventArgs e) {
             // Display JavaScript console messages.
             Debug.Print(String.Format("{0} - Line: {1}", e.Message, e.LineNumber));
+            }
+
+        protected bool hdn = false;
+        private void ButtonShowHide_Click(object sender, RoutedEventArgs e) {
+            if (hdn) {
+                this.dCol.Width = new GridLength(220);
+                this.dRow1.Height = new GridLength(1, GridUnitType.Star);
+                this.dRow2.Height = new GridLength(61);
+                this.dText.Text = "Hide / Show";
+                this.dText.FontSize = 18;
+                hdn = false;
+                }
+            else {
+                this.dCol.Width = new GridLength(20);
+                this.dRow1.Height = new GridLength(0);
+                this.dRow2.Height = new GridLength(1, GridUnitType.Star);
+                this.dText.Text = ">";
+                this.dText.FontSize = 32;
+                hdn = true;
+                }
             }
         }
     }

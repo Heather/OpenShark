@@ -27,23 +27,60 @@
                 SmoothScrolling="True" 
                 DefaultEncoding="iso-8859-7" />
         </awe:WebSessionProvider>
+        <awe:WebSessionProvider x:Key="mySessionGroove" DataPath=".\Cache">
+            <awe:WebSessionProvider.DataSources>
+                <data:ResourceDataSourceProvider x:Key="local" Type="Packed" />
+            </awe:WebSessionProvider.DataSources>
+            <core:WebPreferences 
+                CanScriptsAccessClipboard="True"
+                Javascript="True"
+                Plugins="True"
+                WebSecurity="False"
+                SmoothScrolling="True" 
+                DefaultEncoding="iso-8859-7" />
+        </awe:WebSessionProvider>
     </Window.Resources>
-    <Border SnapsToDevicePixels="True" BorderThickness="10">
+    <Border SnapsToDevicePixels="True" BorderThickness="13">
         <Border.BorderBrush>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black" Offset="0.109"/>
-                <GradientStop Color="White"/>
+                <GradientStop Color="#9D000000" Offset="0"/>
+                <GradientStop Color="#D8000000" Offset="0.676" />
             </LinearGradientBrush>
         </Border.BorderBrush>
         <Border.Background>
             <SolidColorBrush Color="#FFEEEEEE" Opacity="0.8" />
         </Border.Background>
-        <awe:WebControl 
-        Name="webControl" 
-        WebSession="{Binding Source={StaticResource mySession}}" 
-        Source="asset://local/web/index.html"             
-        IsTransparent="True" 
-        WindowClose="webControl_WindowClose" 
-        ConsoleMessage="webControl_ConsoleMessage" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Name="dCol" Width="220" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Name="dRow1" Height="*" />
+                    <RowDefinition Name="dRow2" Height="61" />
+                </Grid.RowDefinitions>
+                <awe:WebControl 
+                Name="webControl" 
+                Grid.Column="0"
+                Grid.Row="0"
+                WebSession="{Binding Source={StaticResource mySession}}" 
+                Source="asset://local/web/index.html"         
+                IsTransparent="True"
+                WindowClose="webControl_WindowClose"
+                ConsoleMessage="webControl_ConsoleMessage" />
+                <Button 
+                    Name="ButtonShowHide"
+                    Grid.Row="1" Background="#C1000000" Click="ButtonShowHide_Click" BorderThickness="0" ClickMode="Press">
+                    <TextBlock Name="dText" Text="Hide / Show" Foreground="#FF6273AA" FontSize="20" FontFamily="Lucida Console" />
+                </Button>
+            </Grid>
+            <awe:WebControl 
+            Name="webControlGroove"
+            Grid.Column="1"
+            WebSession="{Binding Source={StaticResource mySessionGroove}}" 
+            Source="http://listen.grooveshark.com/"       
+            IsTransparent="True"  />
+        </Grid>
     </Border>
 </Window>
