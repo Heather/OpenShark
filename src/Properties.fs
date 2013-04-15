@@ -13,7 +13,7 @@ module Properties =
     let mutable startMinimized      = false
     //very Dynamic properties:
     let mutable WindowPosition  = Rectangle.Empty
-    let mutable WindowState     = FormWindowState.Normal
+    let mutable WindowState     = System.Windows.WindowState.Normal
     //Hotkeys:
     let mutable hotkeyPlay      = int Keys.None
     let mutable hotkeyNext      = int Keys.None
@@ -42,10 +42,10 @@ module Properties =
                             //TODO:         -> Process Other
                             | _             -> Rectangle.Empty
         WindowState <-      match "Window" =|> "WindowState" with
-                            | "Normal"      -> FormWindowState.Normal
-                            | "Maximized"   -> FormWindowState.Maximized
-                            | "Minimized"   -> FormWindowState.Minimized
-                            | _             -> FormWindowState.Normal
+                            | "Normal"      -> System.Windows.WindowState.Normal
+                            | "Maximized"   -> System.Windows.WindowState.Maximized
+                            | "Minimized"   -> System.Windows.WindowState.Minimized
+                            | _             -> System.Windows.WindowState.Normal
 
         hotkeyPlay          <- "HotKeys" ==> "hotkeyPlay"
         hotkeyNext          <- "HotKeys" ==> "hotkeyNext"
@@ -76,9 +76,9 @@ module Properties =
 
         "Window" ==> "WindowState"   
             <|  match WindowState with
-                | w when w = FormWindowState.Normal     -> "Normal"
-                | w when w = FormWindowState.Maximized  -> "Maximized"
-                | w when w = FormWindowState.Minimized  -> "Minimized"
+                | w when w = System.Windows.WindowState.Normal     -> "Normal"
+                | w when w = System.Windows.WindowState.Maximized  -> "Maximized"
+                | w when w = System.Windows.WindowState.Minimized  -> "Minimized"
                 | _ -> "Normal"
 
         "HotKeys" ==> "hotkeyPlay"      <| hotkeyPlay

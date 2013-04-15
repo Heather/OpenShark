@@ -10,7 +10,7 @@
     Width="1280" 
     MinWidth="480"
     MinHeight="300"
-    Title="{Binding Title, ElementName=webControl}"
+    Title="OpenShark 2.0"
     Icon="OpenShark.ico"
     WindowStartupLocation="CenterScreen"
     Background="{x:Null}"
