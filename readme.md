@@ -9,6 +9,7 @@ NOTE: For now I suggest to use 1.0 WinForms based version with some reasons: htt
 FEATURES (Most of features are just WinGrooves but I list them anyways) :
 
  - Open GrooveShark in a separate window instead of a web browser
+ - Chromium engine because of Awesomium
  - Minimize WinGrooves to the tray
  - Tray icon buttons [ Next Previous Play / Stop Like Dislike ]
  - Control WinGrooves using the media keys on your keyboard or using global customizable Hotkeys while in any application
