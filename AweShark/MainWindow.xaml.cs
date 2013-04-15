@@ -12,8 +12,6 @@ using OpenShark;
 namespace AweShark {
     public partial class MainWindow : Window {
 
-        public const string project = "OpenShark 2.0";
-
         private string fn;
         private OpenShark.ApiHook.IniFile ini;
 
@@ -118,7 +116,7 @@ namespace AweShark {
             System.Windows.Forms.ContextMenuStrip cmi = new System.Windows.Forms.ContextMenuStrip();
 
             var current = new System.Windows.Forms.ToolStripMenuItem("Current: "); current.Enabled = false;
-            var about = new System.Windows.Forms.ToolStripMenuItem(project); about.Enabled = false;
+            var about = new System.Windows.Forms.ToolStripMenuItem(OpenShark.Core.project); about.Enabled = false;
             var emo = new System.Windows.Forms.ToolStripMenuItem("Emotions:"); emo.Enabled = false;
             var options = new System.Windows.Forms.ToolStripMenuItem("Options");
 
@@ -183,7 +181,7 @@ namespace AweShark {
             cmi.Items.Add(exit);
 
             ni.Icon = AweShark.Properties.Resources.OpenShark;
-            ni.Text = project;
+            ni.Text = OpenShark.Core.project;
             ni.ContextMenuStrip = cmi;
             ni.Visible = true;
             ni.DoubleClick += ((obj, send) => { this.ShowHide(); });

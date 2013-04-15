@@ -1,8 +1,10 @@
-OpenShark 
-=========
+OpenShark 2.0 (Beta)
+====================
 
- - light WinGrooves re-code on F#
- - Run rc.bat to generate res file for icon
+NOTE: For now I suggest to use 1.0 WinForms based version with some reasons: https://github.com/Heather/OpenShark/tree/1.0
+
+ - Light WinGrooves re-code on WPF / Awesomium / F# / ... maybe some other messy stuff
+ - For now there are a lot of things TODO to make it semi-good
 
 FEATURES (Most of features are just WinGrooves but I list them anyways) :
 
@@ -10,45 +12,45 @@ FEATURES (Most of features are just WinGrooves but I list them anyways) :
  - Minimize WinGrooves to the tray
  - Tray icon buttons [ Next Previous Play / Stop Like Dislike ]
  - Control WinGrooves using the media keys on your keyboard or using global customizable Hotkeys while in any application
+ - other cool stuff maybe
 
 TODO:
 
- - All the properties to xml or ini file (maybe conf for mono)
- - Options window to config all the stuff
+ - Repair C# -> js code
+ - Clean up the code
+ - I am lazy to change ini file with options window & xml
 
-![Screenshot](Resources/OpenShark.ico)
 ```fsharp
-member f.InitializeForm =
-    w.Dock                      <- DockStyle.Fill
-    w.ScriptErrorsSuppressed    <- true
-    w.Url                       <- new Uri("http://listen.grooveshark.com")e
-    contextMenuStrip.Items.AddRange(
-        [|  about
-            exit
-        |]  |> Array.map(fun t -> t :> ToolStripItem))
-    about.Text  <- "About"; about.Click.Add <| fun _ -> MessageBox.Show(project) |> ignore
-    exit.Text   <- "Exit";  exit.Click.Add  <| fun _ -> f.Close()
-    f.Load.Add <| fun _ ->
-        hook.KeyPressed.Add <| fun (_, e) ->
-            match e.Key.ToString() with
-            | "MediaPlayPause"      -> playerExecute "play-pause"
-            | "MediaNextTrack"      -> playerExecute "play-next"
-            | "MediaPreviousTrack"  -> playerExecute "play-prev"
-            let KeyAsInt = int (e.Key ||| hook.keyToModifierKey(e.Modifier))
-            if (KeyAsInt = Properties.hotkeyPlay) then
-                htmlClickOn "#play-pause"
-        w.ObjectForScripting <- f
-        if Properties.startMinimized then showHideWindow()
-    f.Activated.Add <| fun _ ->
+namespace OpenShark
+/// __________________________________________________________________________________________________________
+open System;            open System.Text
+open System.Drawing;    open System.Windows.Forms
+open System.IO;         open System.ComponentModel
+/// __________________________________________________________________________________________________________
+[<AutoOpen>]
+module Core =
+    let project = "OpenShark v.2.0.0"
+    let hook = new KeyboardHook()
+
+    let SetupGlobalHotkeys() =
         hook.unregisterAllHotkeys()
-        try hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_PLAY_PAUSE)
-            hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_NEXT_TRACK)
-            hook.RegisterHotKey(ModifierKeys.None, enum<Keys> VK_MEDIA_PREV_TRACK)
-            hook.RegisterHotKey(
-                hook.Win32ModifiersFromKeys(enum<Keys> Properties.hotkeyPlay)
-              , hook.getKeyWithoutModifier(enum<Keys> Properties.hotkeyPlay))
+        try [   VK_MEDIA_PLAY_PAUSE
+                VK_MEDIA_NEXT_TRACK
+                VK_MEDIA_PREV_TRACK
+            ] |> Seq.iter(fun k -> hook.RegisterHotKey(ModifierKeys.None, enum<Keys> k))
+            [   Properties.hotkeyPlay
+                Properties.hotkeyNext
+                Properties.hotkeyPrevious
+                Properties.hotkeyLike
+                Properties.hotkeyDislike
+                Properties.hotkeyFavorite
+                Properties.hotkeyShowHide
+                Properties.hotkeyMute
+                Properties.hotkeyShuffle 
+            ] |> Seq.iter(fun k ->
+                hook.RegisterHotKey(
+                    hook.Win32ModifiersFromKeys(enum<Keys> k)
+                    , hook.getKeyWithoutModifier(enum<Keys> k)))
         with | :? InvalidOperationException -> ()
-    f.Resize.Add <| fun _ ->
-        if (Properties.trayMinimize) then 
-            if (f.WindowState = FormWindowState.Minimized) then f.Hide()
 ```
+![Screenshot](Resources/OpenShark.ico)
