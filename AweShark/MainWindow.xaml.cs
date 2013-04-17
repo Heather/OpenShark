@@ -106,7 +106,7 @@ namespace AweShark {
             else OpenShark.Properties.Save(ini);
 
             WebCore.Initialize(new WebConfig() {
-                HomeURL = new Uri("http://listen.grooveshark.com/"), // & asset://local/web/index.html
+                HomeURL = new Uri("http://listen.grooveshark.com/"),
                 LogLevel = LogLevel.Verbose
             });
             InitializeComponent();
@@ -198,6 +198,11 @@ namespace AweShark {
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e) {
             base.OnMouseLeftButtonDown(e);
             this.DragMove();
+            }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e) {
+            base.OnMouseRightButtonDown(e);
+            //this.DragMove();
             }
 
         protected override void OnClosed(EventArgs e) {

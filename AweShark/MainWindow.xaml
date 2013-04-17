@@ -19,15 +19,16 @@
     WindowStyle="None"
     ResizeMode="CanResizeWithGrip">
     <Window.Resources>
-        <awe:WebSessionProvider x:Key="mySession" DataPath=".\Cache">
+        <awe:WebSessionProvider x:Key="mySession" DataPath=".\AweCache">
             <awe:WebSessionProvider.DataSources>
                 <data:ResourceDataSourceProvider x:Key="local" Type="Packed" />
             </awe:WebSessionProvider.DataSources>
             <core:WebPreferences 
+                Javascript="True"
                 SmoothScrolling="True" 
                 DefaultEncoding="iso-8859-7" />
         </awe:WebSessionProvider>
-        <awe:WebSessionProvider x:Key="mySessionGroove" DataPath=".\Cache">
+        <awe:WebSessionProvider x:Key="mySessionGroove" DataPath=".\GrooveCache">
             <awe:WebSessionProvider.DataSources>
                 <data:ResourceDataSourceProvider x:Key="local" Type="Packed" />
             </awe:WebSessionProvider.DataSources>
@@ -37,7 +38,7 @@
                 Plugins="True"
                 WebSecurity="False"
                 SmoothScrolling="True" 
-                DefaultEncoding="iso-8859-7" />
+                DefaultEncoding="UTF-8" />
         </awe:WebSessionProvider>
     </Window.Resources>
     <Border SnapsToDevicePixels="True" BorderThickness="13">
@@ -77,6 +78,7 @@
             </Grid>
             <awe:WebControl 
             Name="webControlGroove"
+            ViewType="Offscreen"
             Grid.Column="1"
             WebSession="{Binding Source={StaticResource mySessionGroove}}" 
             Source="http://listen.grooveshark.com/"       
