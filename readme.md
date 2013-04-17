@@ -56,4 +56,3 @@ module Core =
                     , hook.getKeyWithoutModifier(enum<Keys> k)))
         with | :? InvalidOperationException -> ()
 ```
-![Screenshot](Resources/OpenShark.ico)
