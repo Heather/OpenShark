@@ -1,6 +1,8 @@
 OpenShark 2.0 (Beta)
 ====================
 
+![Screenshot](Resources/ss.JPG)
+
 NOTE: For now I suggest to use 1.0 WinForms based version with some reasons: https://github.com/Heather/OpenShark/tree/1.0
 
  - Light WinGrooves re-code on WPF / Awesomium / F# / ... maybe some other messy stuff
