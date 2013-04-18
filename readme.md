@@ -1,5 +1,5 @@
-OpenShark 2.0 (Beta)
-====================
+OpenShark (Beta)
+================
 
 ![Screenshot](Resources/ss.JPG)
 
