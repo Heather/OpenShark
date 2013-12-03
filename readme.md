@@ -2,7 +2,8 @@ OpenShark
 =========
 
  - light WinGrooves re-code on F#
- - Run rc.bat to generate res file for icon
+ - Check `aweshark` branch for awesomium & wpf based project
+ - Run build.bat to build...
 
 FEATURES (Most of features are just WinGrooves but I list them anyways) :
 
@@ -16,7 +17,6 @@ TODO:
  - All the properties to xml or ini file (maybe conf for mono)
  - Options window to config all the stuff
 
-![Screenshot](Resources/OpenShark.ico)
 ```fsharp
 member f.InitializeForm =
     w.Dock                      <- DockStyle.Fill
@@ -52,3 +52,5 @@ member f.InitializeForm =
         if (Properties.trayMinimize) then 
             if (f.WindowState = FormWindowState.Minimized) then f.Hide()
 ```
+
+![Screenshot](Resources/OpenShark.ico)
