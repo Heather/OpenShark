@@ -1,21 +1,21 @@
 ﻿namespace OpenShark
-/// __________________________________________________________________________________________________________
+
 open System;            open System.Text
 open System.Drawing;    open System.Windows.Forms
 open System.IO;         open System.ComponentModel
-/// __________________________________________________________________________________________________________
+
 [<AutoOpen>]
 module Core =
     let project = "OpenShark v.0.1.2"
     let hook = new KeyboardHook()
 type main() as f = 
     inherit Form()
-    /// ______________________________________________________________________________________________________
+
     let w = new WebBrowser()
     let components = new Container()
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
-    /// ______________________________________________________________________________________________________
+
     let current     = new ToolStripMenuItem()
     let about       = new ToolStripMenuItem()
     let emo         = new ToolStripMenuItem()
@@ -27,9 +27,9 @@ type main() as f =
     let favorite    = new ToolStripMenuItem()
     let like        = new ToolStripMenuItem()
     let dislike     = new ToolStripMenuItem()
-    /// ______________________________________________________________________________________________________
+
     let mutable windowInitialized = false
-    /// ______________________________________________________________________________________________________
+
     let showHideWindow() =
         if f.WindowState = FormWindowState.Minimized then
                 f.Show(); f.WindowState <- FormWindowState.Normal
@@ -42,12 +42,12 @@ type main() as f =
     let track() =
         if (f.WindowState = FormWindowState.Normal) then
             Properties.WindowPosition <- f.DesktopBounds
-    /// ______________________________________________________________________________________________________
+
     let playerExecute action = w.Document.GetElementById(action).InvokeMember("click") |> ignore
     let htmlClickOn selector =
         if w.ReadyState = WebBrowserReadyState.Complete then
             w.Document.InvokeScript("clickElement", [|(selector : obj)|]) |> ignore
-    /// ______________________________________________________________________________________________________
+
     let fn = Path.GetDirectoryName(Application.ExecutablePath) + "\\OpenShark.ini"
     let ini = new IniFile(fn)
     do  if File.Exists fn then Properties.Load ini (* Load config *)
@@ -58,23 +58,23 @@ type main() as f =
             f.WindowState       <- Properties.WindowState
         else f.StartPosition    <- FormStartPosition.WindowsDefaultLocation
         f.InitializeForm
-    /// ______________________________________________________________________________________________________
+
     member f.InitializeForm =
         f.Width   <- 1200
         f.Height  <- 650
         f.Text    <- project
-        /// ______________________________________________________________________________________________________
+
         w.Dock                      <- DockStyle.Fill
         w.ScriptErrorsSuppressed    <- true
         w.Url                       <- new Uri("http://listen.grooveshark.com")
-        /// ______________________________________________________________________________________________________
+
         notifyIcon.ContextMenuStrip <- contextMenuStrip
         notifyIcon.Text             <- "OpenShark"
         notifyIcon.Icon             <- IconResource.OpenSharkIcon.Icon
         notifyIcon.Visible          <- true
         notifyIcon.MouseDoubleClick.Add <| fun _ ->
             f.Show(); f.WindowState <- FormWindowState.Normal
-        /// ______________________________________________________________________________________________________
+
         contextMenuStrip.Items.AddRange(
             [|  current
                 previous; next; play
@@ -83,11 +83,11 @@ type main() as f =
                 about
                 options; exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
-        /// ______________________________________________________________________________________________________
+
         current.Text    <- "Current:";  current.Enabled     <- false
         about.Text      <- project;     about.Enabled       <- false
         emo.Text        <- "Emotions:"; emo.Enabled         <- false
-        /// ______________________________________________________________________________________________________
+
         options.Text    <- "Options";   options.Click.Add   <| fun _ -> MessageBox.Show "Not supported yet" |> ignore
         exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
         previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
@@ -97,7 +97,7 @@ type main() as f =
         favorite.Text   <- "Favorite";  favorite.Click.Add  <| fun _ -> htmlClickOn "#np-fav"
         like.Text       <- "Like";      like.Click.Add      <| fun _ -> htmlClickOn "#player-wrapper .queue-item-active .smile"
         dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
-        /// ______________________________________________________________________________________________________
+
         f.Load.Add <| fun _ ->
             hook.KeyPressed.Add <| fun (_, e) ->
                 match e.Key.ToString() with
@@ -119,7 +119,7 @@ type main() as f =
                     | _ -> ()
             w.ObjectForScripting <- f
             if Properties.startMinimized then showHideWindow()
-        /// ______________________________________________________________________________________________________
+
         f.Activated.Add <| fun _ ->
             hook.unregisterAllHotkeys()
             try [   VK_MEDIA_PLAY_PAUSE
@@ -140,20 +140,20 @@ type main() as f =
                         hook.Win32ModifiersFromKeys(enum<Keys> k)
                         , hook.getKeyWithoutModifier(enum<Keys> k)))
             with | :? InvalidOperationException -> ()
-        /// ______________________________________________________________________________________________________
+
         f.Resize.Add <| fun _ ->
             if (Properties.trayMinimize) then 
                 if (f.WindowState = FormWindowState.Minimized) then f.Hide()
-        /// ______________________________________________________________________________________________________
+
         f.Icon              <- IconResource.OpenSharkIcon.Icon
         f.CausesValidation  <- false;
-        /// ______________________________________________________________________________________________________
+
         f.Controls.AddRange [|w|]; windowInitialized <- true
-        /// ______________________________________________________________________________________________________
+
         contextMenuStrip.ResumeLayout(false)
         f.ResumeLayout(false)
         f.PerformLayout()
-    /// __________________________________________________________________________________________________________
+
     override f.OnLoad(e : EventArgs) =
         base.OnLoad(e);
     override f.OnClosed(e : EventArgs) =
@@ -170,7 +170,7 @@ type main() as f =
     override f.Dispose(disposing : bool) =
         if not disposing then if components <> null then components.Dispose()
         base.Dispose(disposing)
-/// __________________________________________________________________________________________________________
+
 [<AutoOpen>]
 module Main = [<STAThread>] do 
     let mutable ok = ref true
@@ -178,4 +178,3 @@ module Main = [<STAThread>] do
     if !ok then Application.Run(new main());   
     else MessageBox.Show("OpenShark is already running.") |> ignore
     GC.KeepAlive(m)
-/// __________________________________________________________________________________________________________

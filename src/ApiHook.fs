@@ -1,12 +1,11 @@
 ﻿namespace OpenShark
-/// __________________________________________________________________________________________________________
+
 open System; open System.Text; open System.Windows.Forms
-/// __________________________________________________________________________________________________________
+
 [<AutoOpen>]
 module ApiHook =
-    /// ______________________________________________________________________________________________________
     open System.Runtime.InteropServices
-    /// ______________________________________________________________________________________________________
+
     [<AutoOpen>]
     module User32 =
         [<DllImport(@"User32", CharSet = CharSet.Ansi, SetLastError = false, ExactSpelling = true)>]
@@ -19,7 +18,7 @@ module ApiHook =
         extern int64 WritePrivateProfileString(string section, string key, string v, string filePath);
         [<DllImport("kernel32")>]
         extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
-    /// ______________________________________________________________________________________________________
+
     type public IniFile(iNIPath : string) =
         let mutable path = iNIPath
         member X.Path
@@ -31,7 +30,7 @@ module ApiHook =
             let temp = new StringBuilder(255)
             let i = GetPrivateProfileString(section, key, "", temp, 255, X.Path)
             temp.ToString()
-    /// ______________________________________________________________________________________________________
+
     type public KeyboardHook() as X =
         inherit NativeWindow()
         let mutable _currentId = 0
@@ -99,4 +98,3 @@ module ApiHook =
             member D.Dispose() = 
                 X.unregisterAllHotkeys()
                 X.DestroyHandle()
-/// __________________________________________________________________________________________________________

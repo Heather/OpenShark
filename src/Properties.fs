@@ -1,20 +1,19 @@
 ﻿namespace OpenShark
-/// __________________________________________________________________________________________________________
+
 open System; open System.Drawing; open System.Windows.Forms
 /// __________________________________________________________________________________________________________
 /// NOTE: I know that serialization will be better but so far I'm just lazy weirdo.
 /// __________________________________________________________________________________________________________
 [<AutoOpen>]
 module Properties =
-/// __________________________________________________________________________________________________________
-    //very Static properties:
+    //very Static properties_____________________________________________
     let mutable trayMinimize        = true
     let mutable trackWindowPosition = false
     let mutable startMinimized      = false
-    //very Dynamic properties:
+    //very Dynamic properties____________________________________________
     let mutable WindowPosition  = Rectangle.Empty
     let mutable WindowState     = FormWindowState.Normal
-    //Hotkeys:
+    //Hotkeys____________________________________________________________
     let mutable hotkeyPlay      = int Keys.None
     let mutable hotkeyNext      = int Keys.None
     let mutable hotkeyPrevious  = int Keys.None
@@ -90,4 +89,3 @@ module Properties =
         "HotKeys" ==> "hotkeyShowHide"  <| hotkeyShowHide
         "HotKeys" ==> "hotkeyMute"      <| hotkeyMute
         "HotKeys" ==> "hotkeyShuffle"   <| hotkeyShuffle
-/// __________________________________________________________________________________________________________
