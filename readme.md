@@ -1,9 +1,11 @@
 OpenShark 
 =========
 
- - light WinGrooves re-code on F#
+ - light WinGrooves re-code on F# with maybe some advance
  - Check `aweshark` branch for awesomium & wpf based project
  - Run build.bat to build...
+
+![Screenshot](http://d3j5vwomefv46c.cloudfront.net/photos/large/825390068.jpg?1386059008)
 
 FEATURES (Most of features are just WinGrooves but I list them anyways) :
 
@@ -59,5 +61,3 @@ member f.InitializeForm =
         if (Properties.trayMinimize) then 
             if (f.WindowState = FormWindowState.Minimized) then f.Hide()
 ```
-
-![Screenshot](Resources/OpenShark.ico)
