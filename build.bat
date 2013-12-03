@@ -1,17 +1,16 @@
 @echo off
 
-::Env
+cls
 if %PROCESSOR_ARCHITECTURE%==x86 (
-         set MSBuild="%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
-) else ( set MSBuild="%SystemRoot%\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe"
+         set MSBUILD="%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
+) else ( set MSBUILD="%SystemRoot%\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe"
 )
+if not exist .nuget\nuget.exe %MSBUILD% .nuget\nuget.targets /t:CheckPrerequisites
+if not exist packages\FAKE\tools\Fake.exe ( 
+	echo Downloading FAKE...
+	".nuget\NuGet.exe" "install" "FAKE" "-OutputDirectory" "packages" "-ExcludeVersion" "-Prerelease"
+)
+"packages\FAKE\tools\Fake.exe" "build.fsx" %*
 
-
-::generate resources
-"C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe" "OpenShark.rc"
-
-::build
-%MSBuild% OpenShark.fsproj /p:TargetFramework=net45 /p:Configuration=Release
-
-::handle errors / show output
+::it's windows and we should expect user just click bat file, so we show result
 pause

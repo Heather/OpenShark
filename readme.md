@@ -12,6 +12,13 @@ FEATURES (Most of features are just WinGrooves but I list them anyways) :
  - Tray icon buttons [ Next Previous Play / Stop Like Dislike ]
  - Control WinGrooves using the media keys on your keyboard or using global customizable Hotkeys while in any application
 
+Fix Visual Studio and MetroFramework:
+
+ 1. Navigate to Debug->Exceptions.
+ 2. Expand "Managed Debugging Assistants"
+ 3. Uncheck the NonComVisibleBaseClass Thrown option.
+ 4. Click "OK"
+
 TODO:
 
  - All the properties to xml or ini file (maybe conf for mono)

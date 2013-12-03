@@ -6,14 +6,22 @@ open System.IO;         open System.ComponentModel
 
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.2"
+    let project = "OpenShark v.0.1.3"
     let hook = new KeyboardHook()
 
-type main() as f = 
-    inherit Form()
+open MetroFramework
 
-    let w = new WebBrowser()
-    let components = new Container()
+type main() as f =
+    inherit MetroFramework.Forms.MetroForm()
+
+    let w           = new WebBrowser()
+    let components  = new Container()
+
+    let tabControl  = new MetroFramework.Controls.MetroTabControl()
+    let wpage       = new MetroFramework.Controls.MetroTabPage()
+    let opage       = new MetroFramework.Controls.MetroTabPage()
+    let pg          = new System.Windows.Forms.PropertyGrid()
+
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
 
@@ -61,13 +69,9 @@ type main() as f =
         f.InitializeForm
 
     member f.InitializeForm =
-        f.Width   <- 1200
+        f.Width   <- 1100
         f.Height  <- 650
         f.Text    <- project
-
-        w.Dock                      <- DockStyle.Fill
-        w.ScriptErrorsSuppressed    <- true
-        w.Url                       <- new Uri("http://listen.grooveshark.com")
 
         notifyIcon.ContextMenuStrip <- contextMenuStrip
         notifyIcon.Text             <- "OpenShark"
@@ -149,11 +153,31 @@ type main() as f =
         f.Icon              <- IconResource.OpenSharkIcon.Icon
         f.CausesValidation  <- false;
 
-        f.Controls.AddRange [|w|]; windowInitialized <- true
+        tabControl.Dock <- System.Windows.Forms.DockStyle.Fill
+        pg.Dock <- System.Windows.Forms.DockStyle.Fill
 
-        contextMenuStrip.ResumeLayout(false)
-        f.ResumeLayout(false)
-        f.PerformLayout()
+        wpage.Text <- "   Grooveshark     "
+        opage.Text <- "    Settings       "
+
+        (*
+            f.SizeGripStyle <- SizeGripStyle.Hide
+            f.Padding       <- new System.Windows.Forms.Padding(0)
+        *)
+
+        wpage.Controls.Add w
+        opage.Controls.Add pg
+        tabControl.Controls.Add wpage
+        tabControl.Controls.Add opage
+
+        f.Controls.Add tabControl
+        pg.SelectedObject <- w
+
+        tabControl.FontSize         <- MetroTabControlSize.Tall
+        w.Dock                      <- DockStyle.Fill
+        w.ScriptErrorsSuppressed    <- true
+        w.Url                       <- new Uri("http://listen.grooveshark.com")
+
+        windowInitialized <- true
 
     override f.OnLoad(e : EventArgs) =
         base.OnLoad(e);
