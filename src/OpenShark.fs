@@ -8,6 +8,7 @@ open System.IO;         open System.ComponentModel
 module Core =
     let project = "OpenShark v.0.1.2"
     let hook = new KeyboardHook()
+
 type main() as f = 
     inherit Form()
 
@@ -174,7 +175,7 @@ type main() as f =
 [<AutoOpen>]
 module Main = [<STAThread>] do 
     let mutable ok = ref true
-    let m = new System.Threading.Mutex(true, "WinGrooves", ok)
+    let m = new System.Threading.Mutex(true, "OpenShark", ok)
     if !ok then Application.Run(new main());   
     else MessageBox.Show("OpenShark is already running.") |> ignore
     GC.KeepAlive(m)
