@@ -159,10 +159,8 @@ type main() as f =
         wpage.Text <- "   Grooveshark     "
         opage.Text <- "    Settings       "
 
-        (*
-            f.SizeGripStyle <- SizeGripStyle.Hide
-            f.Padding       <- new System.Windows.Forms.Padding(0)
-        *)
+        f.SizeGripStyle <- SizeGripStyle.Hide
+        f.Padding       <- new System.Windows.Forms.Padding(2)
 
         wpage.Controls.Add w
         opage.Controls.Add pg

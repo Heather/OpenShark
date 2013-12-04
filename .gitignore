@@ -4,4 +4,8 @@
 /*.sln
 /*.suo
 
-/Release
+/.nuget/*.exe
+
+/packages/FAKE
+/packages/MetroFramework.Fonts.1.2.0.3
+/packages/MetroFramework.RunTime.1.2.0.3
