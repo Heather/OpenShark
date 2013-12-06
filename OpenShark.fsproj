@@ -15,9 +15,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>OpenShark</RootNamespace>
     <AssemblyName>OpenShark</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <Name>OpenShark</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -61,6 +60,9 @@
     <Compile Include="src\Properties.fs" />
     <Compile Include="src\OpenShark.fs" />
     <EmbeddedResource Include="Resources\OpenShark.ico" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
