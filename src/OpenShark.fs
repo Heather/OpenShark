@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.3"
+    let project = "OpenShark v.0.1.4"
     let hook = new KeyboardHook()
 
 open MetroFramework
