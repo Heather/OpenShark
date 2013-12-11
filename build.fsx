@@ -22,7 +22,7 @@ Target "GenResources" (fun _ ->
             info.FileName   <- programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
             info.Arguments  <- "OpenShark.rc"
         ) (TimeSpan.FromMinutes 1.0)     
-    if result <> 0 then failwith "Failed to register FSProtocol.dll"
+    if result <> 0 then failwith "Failed to generate icon resource"
 )
 
 Target "BuildSolution" (fun _ ->
