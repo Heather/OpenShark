@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.4"
+    let project = "OpenShark v.0.1.5"
     let hook = new KeyboardHook()
 
 open MetroFramework
@@ -20,7 +20,7 @@ type main() as f =
     let tabControl  = new MetroFramework.Controls.MetroTabControl()
     let wpage       = new MetroFramework.Controls.MetroTabPage()
     let opage       = new MetroFramework.Controls.MetroTabPage()
-    let pg          = new System.Windows.Forms.PropertyGrid()
+    let pg          = new PropertyGrid()
 
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
@@ -28,7 +28,6 @@ type main() as f =
     let current     = new ToolStripMenuItem()
     let about       = new ToolStripMenuItem()
     let emo         = new ToolStripMenuItem()
-    let options     = new ToolStripMenuItem()
     let exit        = new ToolStripMenuItem()
     let previous    = new ToolStripMenuItem()
     let next        = new ToolStripMenuItem()
@@ -81,20 +80,14 @@ type main() as f =
             f.Show(); f.WindowState <- FormWindowState.Normal
 
         contextMenuStrip.Items.AddRange(
-            [|  current
+            [|  current                 (* payer controls *)
                 previous; next; play
-                emo
+                emo                     (* emotions *)
                 favorite; like; dislike
-                about
-                options; exit
+                about; exit
             |]  |> Array.map(fun t -> t :> ToolStripItem))
 
         current.Text    <- "Current:";  current.Enabled     <- false
-        about.Text      <- project;     about.Enabled       <- false
-        emo.Text        <- "Emotions:"; emo.Enabled         <- false
-
-        options.Text    <- "Options";   options.Click.Add   <| fun _ -> MessageBox.Show "Not supported yet" |> ignore
-        exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
         previous.Text   <- "Previous";  previous.Click.Add  <| fun _ -> playerExecute "play-prev"
         next.Text       <- "Next";      next.Click.Add      <| fun _ -> playerExecute "play-next"
         play.Text       <- "Play/Pause";play.Click.Add      <| fun _ -> playerExecute "play-pause"
@@ -102,6 +95,10 @@ type main() as f =
         favorite.Text   <- "Favorite";  favorite.Click.Add  <| fun _ -> htmlClickOn "#np-fav"
         like.Text       <- "Like";      like.Click.Add      <| fun _ -> htmlClickOn "#player-wrapper .queue-item-active .smile"
         dislike.Text    <- "Dislike";   dislike.Click.Add   <| fun _ -> htmlClickOn "##player-wrapper .queue-item-active .frown"
+        emo.Text        <- "Emotions:"; emo.Enabled         <- false
+        exit.Text       <- "Exit";      exit.Click.Add      <| fun _ -> f.Close()
+        about.Text      <- "About";     about.Click.Add     <| fun _ ->
+            MessageBox.Show <| String.Format("{0}, Engine version: {1}", project, w.Version) |> ignore
 
         f.Load.Add <| fun _ ->
             hook.KeyPressed.Add <| fun (_, e) ->
@@ -153,14 +150,14 @@ type main() as f =
         f.Icon              <- IconResource.OpenSharkIcon.Icon
         f.CausesValidation  <- false;
 
-        tabControl.Dock <- System.Windows.Forms.DockStyle.Fill
-        pg.Dock <- System.Windows.Forms.DockStyle.Fill
+        tabControl.Dock <- DockStyle.Fill
+        pg.Dock         <- DockStyle.Fill
 
         wpage.Text <- "   Grooveshark     "
         opage.Text <- "    Settings       "
 
         f.SizeGripStyle <- SizeGripStyle.Hide
-        f.Padding       <- new System.Windows.Forms.Padding(2)
+        f.Padding       <- new Padding(4)
 
         wpage.Controls.Add w
         opage.Controls.Add pg
