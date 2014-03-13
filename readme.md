@@ -1,7 +1,6 @@
 OpenShark 
 =========
 
- - light WinGrooves re-code on F# with maybe some advance
  - Check `aweshark` branch for awesomium & wpf based project
  - Run build.bat to build...
 
@@ -10,9 +9,10 @@ OpenShark
 FEATURES (Most of features are just WinGrooves but I list them anyways) :
 
  - Open GrooveShark in a separate window instead of a web browser
- - Minimize WinGrooves to the tray
+ - Minimize to the tray
  - Tray icon buttons [ Next Previous Play / Stop Like Dislike ]
- - Control WinGrooves using the media keys on your keyboard or using global customizable Hotkeys while in any application
+ - Control using the media keys on your keyboard or using global customizable Hotkeys while in any application
+ - Twitter or TweetDeck as second tab... (Should be optional in future)
 
 Fix Visual Studio and MetroFramework:
 
@@ -30,7 +30,7 @@ TODO:
 member f.InitializeForm =
     w.Dock                      <- DockStyle.Fill
     w.ScriptErrorsSuppressed    <- true
-    w.Url                       <- new Uri("http://listen.grooveshark.com")e
+    w.Url                       <- new Uri("https://grooveshark.com")
     contextMenuStrip.Items.AddRange(
         [|  about
             exit
