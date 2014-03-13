@@ -18,8 +18,12 @@ Target "GenResources" (fun _ ->
             then Environment.GetEnvironmentVariable("ProgramFiles")
             else Environment.GetEnvironmentVariable("ProgramFiles(x86)")
     let result =
+        let rc =
+            if System.IO.File.Exists <| programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
+                then programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
+                else programFiles + @"\Microsoft SDKs\Windows\v7.1A\bin\RC.Exe"
         ExecProcess (fun info -> 
-            info.FileName   <- programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
+            info.FileName   <- rc
             info.Arguments  <- "OpenShark.rc"
         ) (TimeSpan.FromMinutes 1.0)     
     if result <> 0 then failwith "Failed to generate icon resource"
