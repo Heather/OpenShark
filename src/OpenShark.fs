@@ -6,7 +6,7 @@ open System.IO;         open System.ComponentModel
 
 [<AutoOpen>]
 module Core =
-    let project = "OpenShark v.0.1.5"
+    let project = "OpenShark v.0.1.6"
     let hook = new KeyboardHook()
 
 open MetroFramework
@@ -15,12 +15,12 @@ type main() as f =
     inherit MetroFramework.Forms.MetroForm()
 
     let w           = new WebBrowser()
+    let t           = new WebBrowser()
     let components  = new Container()
 
     let tabControl  = new MetroFramework.Controls.MetroTabControl()
     let wpage       = new MetroFramework.Controls.MetroTabPage()
     let opage       = new MetroFramework.Controls.MetroTabPage()
-    let pg          = new PropertyGrid()
 
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
@@ -151,31 +151,40 @@ type main() as f =
         f.CausesValidation  <- false;
 
         tabControl.Dock <- DockStyle.Fill
-        pg.Dock         <- DockStyle.Fill
 
         wpage.Text <- "   Grooveshark     "
-        opage.Text <- "    Settings       "
+        opage.Text <- "    Twitter       "
 
         f.SizeGripStyle <- SizeGripStyle.Hide
         f.Padding       <- new Padding(4)
 
         wpage.Controls.Add w
-        opage.Controls.Add pg
+        opage.Controls.Add t
+
         tabControl.Controls.Add wpage
         tabControl.Controls.Add opage
+        tabControl.SelectedIndex <- 1
 
         f.Controls.Add tabControl
-        pg.SelectedObject <- w
 
         tabControl.FontSize         <- MetroTabControlSize.Tall
-        w.Dock                      <- DockStyle.Fill
         w.ScriptErrorsSuppressed    <- true
-        w.Url                       <- new Uri("http://listen.grooveshark.com")
+        w.Url                       <- new Uri("https://grooveshark.com")
+
+        t.ScriptErrorsSuppressed    <- true
+        t.Url                       <- if Properties.tweetDeck then new Uri("https://tweetdeck.twitter.com/")
+                                                               else new Uri("https://twitter.com")
 
         windowInitialized <- true
 
+        wpage.Validated.Add <| fun _ -> w.Dock <- DockStyle.Fill
+        opage.Validated.Add <| fun _ -> t.Dock <- DockStyle.Fill
+        wpage.Invalidate()
+        opage.Invalidate()
+
     override f.OnLoad(e : EventArgs) =
         base.OnLoad(e);
+        tabControl.SelectTab 0
     override f.OnClosed(e : EventArgs) =
         base.OnClosed(e)
         match f.WindowState with
