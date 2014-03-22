@@ -3,6 +3,7 @@
 
 open Fake
 open System
+open System.Linq
 
 let buildDir = "./bin"
 let nugetDir = "./.nuget"
@@ -18,14 +19,17 @@ Target "GenResources" (fun _ ->
             then Environment.GetEnvironmentVariable("ProgramFiles")
             else Environment.GetEnvironmentVariable("ProgramFiles(x86)")
     let result =
-        let rc =
-            if System.IO.File.Exists <| programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
-                then programFiles + @"\Microsoft SDKs\Windows\v7.0A\bin\RC.Exe"
-                else programFiles + @"\Microsoft SDKs\Windows\v7.1A\bin\RC.Exe"
-        ExecProcess (fun info -> 
-            info.FileName   <- rc
-            info.Arguments  <- "OpenShark.rc"
-        ) (TimeSpan.FromMinutes 1.0)     
+        let SDKs = ["8.1A"; "8.0A"; "7.1A"; "7.0A"]
+        let RCs = [for sdk in SDKs do
+                    if System.IO.File.Exists <| programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"
+                        then yield programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"]
+        if RCs.Count() > 0 then
+            let rc = RCs.[0]
+            ExecProcess (fun info -> 
+                info.FileName   <- rc
+                info.Arguments  <- "OpenShark.rc"
+            ) (TimeSpan.FromMinutes 1.0)     
+        else failwith "No rc.exe found, check http://download.microsoft.com/download/F/1/3/F1300C9C-A120-4341-90DF-8A52509B23AC/standalonesdk/sdksetup.exe"
     if result <> 0 then failwith "Failed to generate icon resource"
 )
 
