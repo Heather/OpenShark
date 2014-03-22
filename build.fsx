@@ -19,10 +19,15 @@ Target "GenResources" (fun _ ->
             then Environment.GetEnvironmentVariable("ProgramFiles")
             else Environment.GetEnvironmentVariable("ProgramFiles(x86)")
     let result =
+        let Kits = ["8.0"; "7.0"]
         let SDKs = ["8.1A"; "8.0A"; "7.1A"; "7.0A"]
-        let RCs = [for sdk in SDKs do
-                    if System.IO.File.Exists <| programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"
-                        then yield programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"]
+        let RCs = [
+            for kit in Kits do
+                    let src = programFiles + @"\Windows Kits\" + kit + @"\bin\x64\RC.Exe" // "
+                    if System.IO.File.Exists src then yield src
+            for sdk in SDKs do
+                    let src = programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"
+                    if System.IO.File.Exists src then yield src]
         if RCs.Count() > 0 then
             let rc = RCs.[0]
             ExecProcess (fun info -> 
