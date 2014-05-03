@@ -172,8 +172,7 @@ type main() as f =
         w.Url                       <- new Uri("https://grooveshark.com")
 
         t.ScriptErrorsSuppressed    <- true
-        t.Url                       <- if Properties.tweetDeck then new Uri("https://tweetdeck.twitter.com/")
-                                                               else new Uri("https://twitter.com")
+        t.Url                       <- new Uri("https://twitter.com")
 
         windowInitialized <- true
 
