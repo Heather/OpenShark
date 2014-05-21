@@ -14,16 +14,17 @@ Target "Clean" (fun _ -> CleanDirs [buildDir])
 Target "RestorePackages" RestorePackages
 
 Target "GenResources" (fun _ ->
+    let x86 = (IntPtr.Size = 4)
     let programFiles = 
-        if (IntPtr.Size = 4)
-            then Environment.GetEnvironmentVariable("ProgramFiles")
-            else Environment.GetEnvironmentVariable("ProgramFiles(x86)")
+        if x86 then Environment.GetEnvironmentVariable("ProgramFiles")
+               else Environment.GetEnvironmentVariable("ProgramFiles(x86)")
     let result =
         let Kits = ["8.0"; "7.0"]
         let SDKs = ["8.1A"; "8.0A"; "7.1A"; "7.0A"]
         let RCs = [
             for kit in Kits do
-                    let src = programFiles + @"\Windows Kits\" + kit + @"\bin\x64\RC.Exe" // "
+                    let src = if x86 then programFiles + @"\Windows Kits\" + kit + @"\bin\x86\RC.Exe" // "
+                                     else programFiles + @"\Windows Kits\" + kit + @"\bin\x64\RC.Exe" // "
                     if System.IO.File.Exists src then yield src
             for sdk in SDKs do
                     let src = programFiles + @"\Microsoft SDKs\Windows\v" + sdk + @"\bin\RC.Exe"
