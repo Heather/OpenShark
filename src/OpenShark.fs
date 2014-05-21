@@ -4,23 +4,25 @@ open System;            open System.Text
 open System.Drawing;    open System.Windows.Forms
 open System.IO;         open System.ComponentModel
 
+open MetroFramework
+open MetroFramework.Forms
+open MetroFramework.Controls
+
 [<AutoOpen>]
 module Core =
     let project = "OpenShark v.0.1.6"
     let hook = new KeyboardHook()
 
-open MetroFramework
-
 type main() as f =
-    inherit MetroFramework.Forms.MetroForm()
+    inherit MetroForm()
 
     let w           = new WebBrowser()
     let t           = new WebBrowser()
     let components  = new Container()
 
-    let tabControl  = new MetroFramework.Controls.MetroTabControl()
-    let wpage       = new MetroFramework.Controls.MetroTabPage()
-    let opage       = new MetroFramework.Controls.MetroTabPage()
+    let tabControl  = new MetroTabControl()
+    let wpage       = new MetroTabPage()
+    let opage       = new MetroTabPage()
 
     let notifyIcon = new NotifyIcon(components)
     let contextMenuStrip = new ContextMenuStrip(components)
@@ -58,8 +60,8 @@ type main() as f =
 
     let fn = Path.GetDirectoryName(Application.ExecutablePath) + "\\OpenShark.ini"
     let ini = new IniFile(fn)
-    do  if File.Exists fn then Properties.Load ini (* Load config *)
-        else Properties.Save ini (* Create config *)
+    do  if File.Exists fn then Properties.Load ini (*  Load config  *)
+        else Properties.Save ini                   (* Create config *)
         if (Properties.WindowPosition <> Rectangle.Empty) && isVisibleOnAnyScreen(Properties.WindowPosition) then
             f.StartPosition     <- FormStartPosition.Manual
             f.DesktopBounds     <- Properties.WindowPosition
