@@ -10,6 +10,7 @@ module Properties =
     let mutable trayMinimize        = true
     let mutable trackWindowPosition = false
     let mutable startMinimized      = false
+    let mutable customUrl           = "https://twitter.com"
     //very Dynamic properties____________________________________________
     let mutable WindowPosition  = Rectangle.Empty
     let mutable WindowState     = FormWindowState.Normal
@@ -35,6 +36,7 @@ module Properties =
         trayMinimize        <- "General" =-> "trayMinimize"
         trackWindowPosition <- "General" =-> "trackWindowPosition"
         startMinimized      <- "General" =-> "startMinimized"
+        customUrl           <- ini.IniReadValue "General" "customUrl"
 
         WindowPosition <-   match "Window" =|> "WindowPosition" with
                             | "Empty"       -> Rectangle.Empty
@@ -67,6 +69,7 @@ module Properties =
         "General" =-> "trayMinimize"        <| trayMinimize
         "General" =-> "trackWindowPosition" <| trackWindowPosition
         "General" =-> "startMinimized"      <| startMinimized
+        ini.IniWriteValue "General" "customUrl" customUrl |> ignore
 
         "Window" ==> "WindowPosition"   
             <|  match WindowPosition with

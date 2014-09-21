@@ -155,7 +155,7 @@ type main() as f =
         tabControl.Dock <- DockStyle.Fill
 
         wpage.Text <- "   Grooveshark     "
-        opage.Text <- "    Twitter       "
+        opage.Text <- "    " + Properties.customUrl + "       "
 
         f.SizeGripStyle <- SizeGripStyle.Hide
         f.Padding       <- new Padding(4)
@@ -174,7 +174,7 @@ type main() as f =
         w.Url                       <- new Uri("https://grooveshark.com")
 
         t.ScriptErrorsSuppressed    <- true
-        t.Url                       <- new Uri("https://twitter.com")
+        t.Url                       <- new Uri(Properties.customUrl)
 
         windowInitialized <- true
 
