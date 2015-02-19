@@ -4,8 +4,7 @@ OpenShark
  - Check `aweshark` branch for awesomium & wpf based project
  - Run build.bat to build...
 
-FEATURES (Most of features are just WinGrooves but I list them anyways)
------------------------------------------------------------------------
+<b>FEATURES</b> (Most of features are just WinGrooves but I list them anyways):
 
  - Open GrooveShark in a separate window instead of a web browser
  - Minimize to the tray
@@ -25,4 +24,4 @@ TODO:
  - All the properties to xml or ini file (maybe conf for mono)
  - Options window to config all the stuff
 
-![](http://fc03.deviantart.net/fs71/f/2014/098/a/8/anime_render_5_by_michelleurs-d7dp47i.png)
+![](http://fc09.deviantart.net/fs70/i/2011/311/1/0/she__render_by_xhappinessrawr-d4feyph.png)
