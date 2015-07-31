@@ -1,6 +1,8 @@
 OpenShark 
 =========
 
+[the only sad thing is that Grooveshark is RIP now]
+
  - Check `aweshark` branch for awesomium & wpf based project
  - Run build.bat to build...
 
